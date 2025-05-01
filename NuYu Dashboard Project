@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NuYu Weight Loss Program Dashboard</title>
+    <style>
+        :root {
+            --primary: #121840;
+            --secondary: #F2B3A9;
+            --accent1: #FFFFFF;
+            --accent2: #D6C0A9;
+            --accent3: #AC8861;
+            --light: #f8f5f2;
+            --dark: #121840;
+            --danger: #F2B3A9;
+            --warning: #D6C0A9;
+            --success: #AC8861;
+            --text: #121840;
+            --background: #f8f5f2;
+            --card-bg: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .header {
+            background-color: var(--primary);
+            color: var(--accent1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .logo, .user-name {
+            color: var(--accent1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .positive {
+            color: var(--success);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .progress-container {
+            margin-top: 10px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            width: 100%;
+            background-color: var(--light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary);
+            border-radius: 4px;
+        }
+        
+        .card {
+            border-left: 4px solid var(--primary);
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .chart-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 350px;
+        }
+        
+        .activity-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .activity-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .activity-list {
+            list-style: none;
+        }
+        
+        .activity-item {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .activity-meta {
+            font-size: 12px;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .nutrition-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .donut-chart {
+            text-align: center;
+            position: relative;
+        }
+        
+        .donut-chart svg {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+        }
+        
+        .donut-chart-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .donut-chart-value {
+            font-size: 24px;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .donut-chart-title {
+            font-size: 12px;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .nutrition-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .nutrition-item {
+            text-align: center;
+        }
+        
+        .nutrition-value {
+            font-size: 18px;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .nutrition-label {
+            font-size: 12px;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .bottom-container {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 20px;
+        }
+        
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+        }
+        
+        .calendar-header {
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 12px;
+            background-color: var(--light);
+            position: relative;
+        }
+        
+        .calendar-day.active {
+            background-color: var(--secondary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .calendar-day.has-workout::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--dark);
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Nu<span>Yu</span></div>
+            <div class="user-info">
+                <div class="user-name">Alex Johnson</div>
+                <div class="avatar">AJ</div>
+            </div>
+        </div>
+        
+        <h1 class="dashboard-title">Weight Loss Progress</h1>
+        
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 3V21M12 3L8 7M12 3L16 7M19 21H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Current Weight
+                </div>
+                <div class="card-value">78.2 kg</div>
+                <div class="card-subtitle negative">-0.8 kg this week</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 5L5 19M5 5L19 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    BMI
+                </div>
+                <div class="card-value">24.2</div>
+                <div class="card-subtitle positive">-0.3 since last month</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Goal Progress
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%;"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Start: 85 kg</span>
+                        <span>45%</span>
+                        <span>Goal: 70 kg</span>
+                    </div>
+                </div>
+                <div class="card-subtitle">6.8 kg to go!</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 5.12548 16.0077 5.24917 16.0227 5.37061L8.08393 9.87381C7.54913 9.33746 6.81254 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15C6.81254 15 7.54913 14.6625 8.08393 14.1262L16.0227 18.6294C16.0077 18.7508 16 18.8745 16 19C16 20.6569 17.3431 22 19 22C20.6569 22 22 20.6569 22 19C22 17.3431 20.6569 16 19 16C18.1875 16 17.4509 16.3375 16.9161 16.8738L8.97733 12.3706C8.99229 12.2492 9 12.1255 9 12C9 11.8745 8.99229 11.7508 8.97733 11.6294L16.9161 7.12619C17.4509 7.66254 18.1875 8 19 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Weekly Average
+                </div>
+                <div class="card-value">79.1 kg</div>
+                <div class="card-subtitle positive">Trending downward</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-card">
+                <div class="card-title">Weight Trend (Last 8 Weeks)</div>
+                <canvas id="weightChart" width="100%" height="280"></canvas>
+            </div>
+            
+            <div class="chart-card">
+                <div class="card-title">Body Measurements</div>
+                <canvas id="measurementsChart" width="100%" height="280"></canvas>
+            </div>
+        </div>
+        
+        <div class="nutrition-container">
+            <div class="card">
+                <div class="card-title">Today's Calories</div>
+                <div class="donut-chart">
+                    <svg viewBox="0 0 36 36">
+                        <path d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none" stroke="#eeeeee" stroke-width="3" />
+                        <path d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none" stroke="#F2B3A9" stroke-width="3" stroke-dasharray="75, 100" />
+                    </svg>
+                    <div class="donut-chart-label">
+                        <span class="donut-chart-value">1,450</span>
+                        <span class="donut-chart-title">of 1,800 cal</span>
+                    </div>
+                </div>
+                <div class="nutrition-details">
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">142g</span>
+                        <span class="nutrition-label">Protein</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">105g</span>
+                        <span class="nutrition-label">Carbs</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">48g</span>
+                        <span class="nutrition-label">Fat</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Hydration</div>
+                <div class="donut-chart">
+                    <svg viewBox="0 0 36 36">
+                        <path d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none" stroke="#eeeeee" stroke-width="3" />
+                        <path d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none" stroke="#121840" stroke-width="3" stroke-dasharray="60, 100" />
+                    </svg>
+                    <div class="donut-chart-label">
+                        <span class="donut-chart-value">1.8L</span>
+                        <span class="donut-chart-title">of 3L daily goal</span>
+                    </div>
+                </div>
+                <div class="nutrition-details">
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">6</span>
+                        <span class="nutrition-label">Glasses</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">60%</span>
+                        <span class="nutrition-label">Progress</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">4</span>
+                        <span class="nutrition-label">To Go</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-container">
+            <div class="card">
+                <div class="card-title">Activity Calendar (May 2025)</div>
+                <div class="calendar-container">
+                    <div class="calendar-header">Sun</div>
+                    <div class="calendar-header">Mon</div>
+                    <div class="calendar-header">Tue</div>
+                    <div class="calendar-header">Wed</div>
+                    <div class="calendar-header">Thu</div>
+                    <div class="calendar-header">Fri</div>
+                    <div class="calendar-header">Sat</div>
+                    
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day active has-workout">1</div>
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day has-workout">3</div>
+                    <div class="calendar-day">4</div>
+                    
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day has-workout">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day has-workout">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day has-workout">10</div>
+                    <div class="calendar-day">11</div>
+                    
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day has-workout">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day has-workout">15</div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day has-workout">17</div>
+                    <div class="calendar-day">18</div>
+                    
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day has-workout">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day has-workout">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day has-workout">24</div>
+                    <div class="calendar-day">25</div>
+                    
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day has-workout">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day has-workout">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day">31</div>
+                    <div class="calendar-day">1</div>
+                </div>
+            </div>
+            
+            <div class="activity-container">
+                <h2 class="activity-title">Recent Activities</h2>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background-color: var(--primary);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 12H4M6 12H8M10 12H12M14 12H16M18 12H20M22 12H23M5 19C7.20914 19 9 17.2091 9 15C9 12.7909 7.20914 11 5 11C2.79086 11 1 12.7909 1 15C1 17.2091 2.79086 19 5 19ZM5 19V22M5 11V8M19 19C21.2091 19 23 17.2091 23 15C23 12.7909 21.2091 11 19 11C16.7909 11 15 12.7909 15 15C15 17.2091 16.7909 19 19 19ZM19 19V22M19 11V8M12 7C14.2091 7 16 5.20914 16 3C16 0.790863 14.2091 -1 12 -1C9.79086 -1 8 0.790863 8 3C8 5.20914 9.79086 7 12 7ZM12 7V10M12 -1V-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-name">Morning Run</div>
+                            <div class="activity-meta">Today, 06:30 AM • 5.2 km • 32:15 min</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background-color: var(--secondary);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 4V20M17 4V20M3 8H7M17 8H21M3 12H21M3 16H7M17 16H21" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-name">Gym Session</div>
+                            <div class="activity-meta">Yesterday, 05:30 PM • Strength Training • 45 min</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background-color: var(--accent2);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 3.05493C6.50005 3.55238 3 7.36745 3 12C3 16.9706 7.02944 21 12 21C16.6326 21 20.4476 17.4999 20.9451 13H11V3.05493Z" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20.4878 9H15V3.5123C17.5572 4.41613 19.5839 6.44285 20.4878 9Z" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-name">Yoga Class</div>
+                            <div class="activity-meta">Apr 29, 07:00 AM • Flexibility • 60 min</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background-color: var(--accent3);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20.2739 9.86856C20.9505 9.38559 21.4 8.54555 21.4 7.6C21.4 6.05992 20.1401 4.8 18.6 4.8C18.1463 4.8 17.7193 4.9192 17.3473 5.12738C16.9268 3.31769 15.3337 2 13.4 2C11.4663 2 9.87323 3.31769 9.45265 5.12738C9.08073 4.9192 8.65367 4.8 8.2 4.8C6.65992 4.8 5.4 6.05992 5.4 7.6C5.4 8.54555 5.84952 9.38559 6.52609 9.86856C4.97263 10.4322 3.8 11.9051 3.8 13.6C3.8 15.2949 4.97263 16.7678 6.52609 17.3314C5.84952 17.8144 5.4 18.6545 5.4 19.6C5.4 21.1401 6.65992 22.4 8.2 22.4C8.65367 22.4 9.08073 22.2808 9.45265 22.0726C9.87323 23.8823 11.4663 25.2 13.4 25.2C15.3337 25.2 16.9268 23.8823 17.3473 22.0726C17.7193 22.2808 18.1463 22.4 18.6 22.4C20.1401 22.4 21.4 21.1401 21.4 19.6C21.4 18.6545 20.9505 17.8144 20.2739 17.3314C21.8274 16.7678 23 15.2949 23 13.6C23 11.9051 21.8274 10.4322 20.2739 9.86856Z" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M13.5 6.8L13.5 20" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M18.2 10.4L13.4 13.6L8.59998 10.4" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.60001 16.8L13.4 13.6L18.2 16.8" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-name">Swimming</div>
+                            <div class="activity-meta">Apr 28, 06:00 PM • 30 laps • 40 min</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2025 NuYu Weight Loss Program • All rights reserved
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script>
+        // Weight Chart
+        const weightCtx = document.getElementById('weightChart').getContext('2d');
+        const weightChart = new Chart(weightCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+                datasets: [{
+                    label: 'Weight (kg)',
+                    data: [85, 83.7, 82.5, 81.6, 80.8, 79.7, 79.0, 78.2],
+                    backgroundColor: 'rgba(242, 179, 169, 0.2)',
+                    borderColor: 'rgba(242, 179, 169, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    pointBackgroundColor: 'rgba(242, 179, 169, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZ
