@@ -1,0 +1,337 @@
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Bell, Calendar, CheckCircle, Clock, Clipboard, Filter, 
+  HelpCircle, Home, List, PlusCircle, Search, Settings, 
+  User, X, AlertCircle, BarChart, FileText
+} from 'lucide-react';
+
+const GastroenterologyDashboard = () => {
+  // Sample data - in a real app, this would come from a database
+  const [consults, setConsults] = useState([
+    {
+      id: 1,
+      patientName: "John Smith",
+      mrn: "MRN12345",
+      requestTime: "2025-05-01T08:30:00",
+      requestType: "Inpatient",
+      unit: "Medical Ward 4",
+      urgency: "Urgent",
+      reason: "Acute upper GI bleeding",
+      status: "Pending",
+      requestedBy: "Dr. Williams"
+    },
+    {
+      id: 2,
+      patientName: "Emma Johnson",
+      mrn: "MRN54321",
+      requestTime: "2025-05-01T09:15:00",
+      requestType: "ED Consult",
+      unit: "Emergency Department",
+      urgency: "STAT",
+      reason: "Severe abdominal pain with vomiting",
+      status: "In Progress",
+      requestedBy: "Dr. Chen"
+    },
+    {
+      id: 3,
+      patientName: "Robert Davis",
+      mrn: "MRN78901",
+      requestTime: "2025-04-30T14:20:00",
+      requestType: "Outpatient",
+      unit: "GI Clinic",
+      urgency: "Routine",
+      reason: "Follow-up colonoscopy results",
+      status: "Scheduled",
+      requestedBy: "Self"
+    },
+    {
+      id: 4,
+      patientName: "Sarah Wilson",
+      mrn: "MRN23456",
+      requestTime: "2025-04-30T10:45:00",
+      requestType: "GP Referral",
+      unit: "N/A",
+      urgency: "Semi-urgent",
+      reason: "Unexplained weight loss and changed bowel habits",
+      status: "New Referral",
+      requestedBy: "Dr. Thompson (GP)"
+    },
+    {
+      id: 5,
+      patientName: "Michael Brown",
+      mrn: "MRN67890",
+      requestTime: "2025-04-29T16:10:00",
+      requestType: "Endoscopy Request",
+      unit: "Endoscopy Unit",
+      urgency: "Routine",
+      reason: "Diagnostic EGD for GERD unresponsive to PPI",
+      status: "Approved",
+      requestedBy: "Dr. Garcia"
+    },
+  ]);
+  
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Filter consults based on current filter and search term
+  const filteredConsults = consults.filter(consult => {
+    const matchesFilter = filter === 'all' || consult.requestType.toLowerCase().includes(filter.toLowerCase());
+    const matchesSearch = consult.patientName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          consult.mrn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          consult.reason.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+  
+  // Mark a consult as complete
+  const completeConsult = (id) => {
+    setConsults(consults.map(consult => 
+      consult.id === id ? {...consult, status: "Completed"} : consult
+    ));
+  };
+  
+  // Stat cards data
+  const stats = [
+    { title: "Pending Consults", value: consults.filter(c => c.status === "Pending").length, icon: <Clock className="h-5 w-5 text-amber-500" /> },
+    { title: "Urgent Cases", value: consults.filter(c => c.urgency === "Urgent" || c.urgency === "STAT").length, icon: <AlertCircle className="h-5 w-5 text-red-500" /> },
+    { title: "Today's Consults", value: consults.filter(c => new Date(c.requestTime).toDateString() === new Date().toDateString()).length, icon: <Calendar className="h-5 w-5 text-blue-500" /> },
+    { title: "Completed Today", value: consults.filter(c => c.status === "Completed" && new Date(c.requestTime).toDateString() === new Date().toDateString()).length, icon: <CheckCircle className="h-5 w-5 text-green-500" /> },
+  ];
+  
+  return (
+    <div className="flex flex-col h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 px-4 py-4 flex justify-between items-center">
+        <div className="flex items-center">
+          <div className="bg-blue-600 text-white p-2 rounded-md mr-3">
+            <FileText className="h-6 w-6" />
+          </div>
+          <h1 className="text-xl font-bold">GastroConnect Dashboard</h1>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <Bell className="h-6 w-6 text-gray-500" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+          </div>
+          <div className="flex items-center bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+            <User className="h-4 w-4 mr-2" />
+            <span className="text-sm font-medium">Dr. Gastro</span>
+          </div>
+          <Settings className="h-6 w-6 text-gray-500" />
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-48 bg-gray-800 text-white p-4 flex flex-col">
+          <nav className="flex-1 space-y-4">
+            <div className="flex items-center space-x-2 px-2 py-2 bg-blue-700 rounded-md">
+              <Home className="h-5 w-5" />
+              <span>Dashboard</span>
+            </div>
+            <div className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-700 rounded-md">
+              <List className="h-5 w-5" />
+              <span>All Consults</span>
+            </div>
+            <div className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-700 rounded-md">
+              <Clock className="h-5 w-5" />
+              <span>Pending</span>
+            </div>
+            <div className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-700 rounded-md">
+              <Calendar className="h-5 w-5" />
+              <span>Schedule</span>
+            </div>
+            <div className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-700 rounded-md">
+              <BarChart className="h-5 w-5" />
+              <span>Analytics</span>
+            </div>
+            <div className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-700 rounded-md">
+              <Clipboard className="h-5 w-5" />
+              <span>Templates</span>
+            </div>
+          </nav>
+          <div className="pt-4 mt-6 border-t border-gray-700">
+            <div className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-700 rounded-md">
+              <HelpCircle className="h-5 w-5" />
+              <span>Help</span>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main dashboard area */}
+        <main className="flex-1 overflow-auto p-6">
+          {/* Stats row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {stats.map((stat, index) => (
+              <div key={index} className="bg-white rounded-lg shadow p-4 flex items-center">
+                <div className="bg-gray-100 rounded-full p-3 mr-4">
+                  {stat.icon}
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">{stat.title}</p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Consult List */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-4 border-b border-gray-200">
+              <Tabs defaultValue="all">
+                <div className="flex justify-between items-center mb-4">
+                  <TabsList>
+                    <TabsTrigger value="all" onClick={() => setFilter('all')}>All Consults</TabsTrigger>
+                    <TabsTrigger value="inpatient" onClick={() => setFilter('inpatient')}>Inpatient</TabsTrigger>
+                    <TabsTrigger value="ed" onClick={() => setFilter('ed')}>ED</TabsTrigger>
+                    <TabsTrigger value="outpatient" onClick={() => setFilter('outpatient')}>Outpatient</TabsTrigger>
+                    <TabsTrigger value="gp" onClick={() => setFilter('gp')}>GP Referrals</TabsTrigger>
+                    <TabsTrigger value="endoscopy" onClick={() => setFilter('endoscopy')}>Endoscopy</TabsTrigger>
+                  </TabsList>
+                  <div className="flex">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Search consults..."
+                        className="pl-9 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                    </div>
+                    <button className="ml-2 p-2 bg-gray-100 rounded-md">
+                      <Filter className="h-5 w-5 text-gray-500" />
+                    </button>
+                    <button className="ml-2 px-3 py-2 bg-blue-600 text-white rounded-md flex items-center">
+                      <PlusCircle className="h-4 w-4 mr-1" />
+                      <span>New</span>
+                    </button>
+                  </div>
+                </div>
+                
+                <TabsContent value="all" className="mt-0">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full">
+                      <thead>
+                        <tr className="bg-gray-50">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requested</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {filteredConsults.map((consult) => (
+                          <tr key={consult.id} className="hover:bg-gray-50">
+                            <td className="px-4 py-3">
+                              <div>
+                                <div className="font-medium text-gray-900">{consult.patientName}</div>
+                                <div className="text-xs text-gray-500">{consult.mrn}</div>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                consult.requestType === "Inpatient" ? "bg-blue-100 text-blue-800" :
+                                consult.requestType === "ED Consult" ? "bg-red-100 text-red-800" :
+                                consult.requestType === "Outpatient" ? "bg-green-100 text-green-800" :
+                                consult.requestType === "GP Referral" ? "bg-purple-100 text-purple-800" :
+                                "bg-amber-100 text-amber-800"
+                              }`}>
+                                {consult.requestType}
+                              </span>
+                              {consult.urgency === "Urgent" || consult.urgency === "STAT" ? (
+                                <span className="ml-1 px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
+                                  {consult.urgency}
+                                </span>
+                              ) : null}
+                            </td>
+                            <td className="px-4 py-3 text-sm text-gray-500">{consult.unit}</td>
+                            <td className="px-4 py-3 text-sm text-gray-500 max-w-xs truncate">{consult.reason}</td>
+                            <td className="px-4 py-3">
+                              <div className="text-sm text-gray-900">
+                                {new Date(consult.requestTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {new Date(consult.requestTime).toLocaleDateString()}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                by {consult.requestedBy}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className={`px-2 py-1 text-xs rounded-full ${
+                                consult.status === "Pending" ? "bg-amber-100 text-amber-800" :
+                                consult.status === "In Progress" ? "bg-blue-100 text-blue-800" :
+                                consult.status === "Completed" ? "bg-green-100 text-green-800" :
+                                consult.status === "Scheduled" ? "bg-purple-100 text-purple-800" :
+                                "bg-gray-100 text-gray-800"
+                              }`}>
+                                {consult.status}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-sm font-medium">
+                              <div className="flex space-x-2">
+                                <button className="text-blue-600 hover:text-blue-900">View</button>
+                                {consult.status !== "Completed" && (
+                                  <button 
+                                    className="text-green-600 hover:text-green-900"
+                                    onClick={() => completeConsult(consult.id)}
+                                  >
+                                    Complete
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="inpatient" className="mt-0">
+                  <div className="p-4 text-center text-gray-500">
+                    Filter view will display inpatient consults here
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="ed" className="mt-0">
+                  <div className="p-4 text-center text-gray-500">
+                    Filter view will display ED consults here
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="outpatient" className="mt-0">
+                  <div className="p-4 text-center text-gray-500">
+                    Filter view will display outpatient consults here
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="gp" className="mt-0">
+                  <div className="p-4 text-center text-gray-500">
+                    Filter view will display GP referrals here
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="endoscopy" className="mt-0">
+                  <div className="p-4 text-center text-gray-500">
+                    Filter view will display endoscopy requests here
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+            <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-500">
+              Showing {filteredConsults.length} of {consults.length} consults
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default GastroenterologyDashboard;
